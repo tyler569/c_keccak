@@ -72,17 +72,14 @@ char *sponge_digest(Sponge *s, size_t digest_len) {
     size_t input_len = s->input_length % s->rate;
     
     memcpy(input, s->buffer, input_len);
-    
-    // I would check here to ensure the block is not full,
-    // but that should be impossible as far as I know,
-    // and if it's happening I have bigger problems.
-
+        
     input = s->padding_function(input, input_len, s->rate);
     for (size_t i=0; i<s->rate; i+=1) {
         s->state[i] ^= input[i];
     }
     s->state = s->permutation_function(s->state);
-
+    free(input);
+    
     // consuming last block
     // ------
     // squeezing
@@ -103,3 +100,4 @@ char *sponge_digest(Sponge *s, size_t digest_len) {
     }
     return digest;
 }
+
