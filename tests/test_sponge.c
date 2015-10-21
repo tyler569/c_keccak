@@ -8,8 +8,8 @@
 
 char *test_permutation(char *state) {
     char tmp = state[0];
-    state[0] = state[1] + 1;
-    state[1] = tmp ^ 0xAA;
+    state[0] = state[1];
+    state[1] = tmp;
     return state;
 }
 
@@ -35,12 +35,30 @@ int main() {
     s->state = malloc(s->width);
     s->buffer = malloc(s->rate);
     s->input_length = 0;
+    
+    Sponge *t = malloc(sizeof(Sponge));
+    t->permutation_function = &test_permutation;
+    t->padding_function = &test_padding;
+    t->rate = 1;
+    t->width = 2;
+    t->state = malloc(t->width);
+    t->buffer = malloc(t->rate);
+    t->input_length = 0;
 
-    sponge_update(s, "Test", 4);
-    sponge_update(s, "Other Tests", 11);
-    char *result = sponge_digest(s, 16);
+    sponge_update(s, "1234", 4);
+    sponge_update(s, "56789", 5);
+
+    sponge_update(t, "123456789", 9);
+
+    char *result_s = sponge_digest(s, 16);
+    char *result_t = sponge_digest(t, 16);
     for (int i=0; i<16; i+=1) {
-        printf("%x ", *(result + i));
+        printf("%x ", (unsigned char) *(result_s + i));
+    }
+    printf("\n");
+    for (int i=0; i<16; i+=1) {
+        printf("%x ", (unsigned char) *(result_t + i));
     }
     printf("\n");
 }
+
