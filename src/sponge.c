@@ -109,11 +109,15 @@ char *sponge_digest(Sponge *s, size_t digest_len) {
     memcpy(input, s->buffer, input_len);
         
     input = s->padding_function(input, input_len, s->rate);
-    for (size_t i=0; i<s->rate; i+=1) {
-        s->state[i] ^= input[i];
+    if (input_len == 0 && input == NULL) {
+        // Padding function signaled no padding is needed.
+    } else {
+        for (size_t i=0; i<s->rate; i+=1) {
+            s->state[i] ^= input[i];
+        }
+        s->state = s->permutation_function(s->state);
+        free(input);
     }
-    s->state = s->permutation_function(s->state);
-    free(input);
     
     // consuming last block
     // ------
