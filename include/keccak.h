@@ -9,15 +9,20 @@
 
 #include <stdint.h>
 
-typedef struct keccak_ {
+typedef struct _keccak {
 	int l; /* log2(w); */
-	size_t rate;
-
-	size_t count;
-	void *buffer;
-
+	size_t size;
+	char *buffer;
 	uint64_t state[25];
 } Keccak;
+
+typedef struct _keccak_sponge {
+    char *(*func)(char *);
+    int rate;
+    char *(*pad)(char *);
+} Sponge;
+
+
 
 #define LANE_BITS(c)  (1 << c->l)
 #define PLANE_BITS(c) (5 * LANE_BITS(c))
@@ -25,6 +30,6 @@ typedef struct keccak_ {
 
 int keccak_init(int rate, int cap, Keccak *c);
 int keccak_update(Keccak *c, const void *message, size_t len);
-int keccak_final(Keccak *c, void *md, size_t digest_len);
+char *keccak_digest(Keccak *c, int digest_len);
 
-#endif
+#endif /* _KECCAK_H_ */
