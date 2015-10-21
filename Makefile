@@ -1,15 +1,11 @@
 CC=clang
-CFLAGS=-g -Werror -Wall -Iinclude
+CFLAGS=-Werror -Wall -Iinclude
+DEBUGFLAGS=-g -O0
 
-C_FILES := $(wildcard src/*.c)
-O_FILES := $(addprefix obj/,$(notdir $(C_FILES:.c=.o)))
+all: test_sponge
 
-all: $(O_FILES)
-
-test:
-
-obj/%.o: src/%.c
-	 $(CC) $(CFLAGS) -c $< -o $@
+test_sponge:
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) src/sponge.c tests/test_sponge.c -obin/test_sponge
 
 clean:
-	rm -rf obj/*.o 
+	rm -rf obj/*.o bin/*

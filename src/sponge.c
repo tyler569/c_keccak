@@ -44,7 +44,7 @@ void sponge_update(Sponge *s, char *data, size_t data_len) {
             s->input_length += data_consumed;
             return;
         }
-        memcpy(input, data+data_consumed, s->rate-input_len);
+        memcpy(input, data+data_consumed, s->rate-(input_len % s->rate));
         data_consumed += s->rate-(input_len % s->rate);
         input_len += s->rate-(input_len % s->rate);
         data_remaining = data_len - data_consumed;
