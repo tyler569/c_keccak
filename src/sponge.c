@@ -16,6 +16,27 @@
 #include "sponge.h"
 
 /*
+ * sponge_init makes and initalizes the sponge contruction struct
+ *
+ * Inputs:
+ * The various components of the struct
+ */
+Sponge *sponge_init(
+        char *(*permutation_function)(char *state),
+        char *(*padding_function)(char *state, size_t len, size_t final_len),
+        size_t state_width,
+        size_t rate) {
+    Sponge *s = malloc(sizeof(Sponge));
+    s->permutation_function = permutation_function;
+    s->padding_function = padding_function;
+    s->rate = rate;
+    s->buffer = malloc(rate);
+    s->state = malloc(state_width);
+    s->input_length = 0;
+    return s;
+}
+
+/*
  * sponge_update takes input and absorbes it into the sponge
  * construction.
  *

@@ -27,24 +27,9 @@ char *test_padding(char *buffer, size_t len, size_t final_len) {
 }
 
 int main() {
-    Sponge *s = malloc(sizeof(Sponge));
-    s->permutation_function = &test_permutation;
-    s->padding_function = &test_padding;
-    s->rate = 1;
-    s->width = 2;
-    s->state = malloc(s->width);
-    s->buffer = malloc(s->rate);
-    s->input_length = 0;
+    Sponge *s = sponge_init(&test_permutation, &test_padding, 2, 1);
+    Sponge *t = sponge_init(&test_permutation, &test_padding, 2, 1);
     
-    Sponge *t = malloc(sizeof(Sponge));
-    t->permutation_function = &test_permutation;
-    t->padding_function = &test_padding;
-    t->rate = 1;
-    t->width = 2;
-    t->state = malloc(t->width);
-    t->buffer = malloc(t->rate);
-    t->input_length = 0;
-
     sponge_update(s, "1234", 4);
     sponge_update(s, "56789", 5);
 

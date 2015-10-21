@@ -3,15 +3,18 @@
 #define _SPONGE_H_
 
 typedef struct _sponge {
-    char *(*permutation_function)(char *state);
-    char *(*padding_function)(char *state, size_t len, size_t final_len);
+    char *(*permutation_function)(char *);
+    char *(*padding_function)(char *, size_t, size_t);
     size_t rate;
-    size_t width;
-    char *state;
     char *buffer;
+    char *state;
     size_t input_length;
 } Sponge;
 
+Sponge *sponge_init(
+        char *(*permutation_function)(char *),
+        char *(*padding_function)(char *, size_t, size_t),
+        size_t, size_t);
 void sponge_update(Sponge *s, char *data, size_t len);
 char *sponge_digest(Sponge *s, size_t digest_len);
 
