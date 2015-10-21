@@ -37,6 +37,20 @@ Sponge *sponge_init(
 }
 
 /*
+ * sponge_free frees memory inside the Sponge struct, then the struct itself.
+ * Simply free()'ing the Sponge pointer returned by sponge_init will
+ * cause memory to leak.
+ *
+ * Inputs:
+ * Sponge *s - the sponge to free
+ */
+void sponge_free(Sponge *s) {
+    free(s->state);
+    free(s->buffer);
+    free(s);
+}
+
+/*
  * sponge_update takes input and absorbes it into the sponge
  * construction.
  *

@@ -44,6 +44,8 @@ int main() {
     printf("Should be identical:\n");
     print_digest(sponge_digest(s, 16), 16);
     print_digest(sponge_digest(t, 16), 16);
+    sponge_free(s);
+    sponge_free(t);
 
     Sponge *zero_len = sponge_init(&test_permutation, &test_padding, 2, 1);
 

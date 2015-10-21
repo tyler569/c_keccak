@@ -15,6 +15,7 @@ Sponge *sponge_init(
         char *(*permutation_function)(char *),
         char *(*padding_function)(char *, size_t, size_t),
         size_t, size_t);
+void sponge_free(Sponge *s);
 void sponge_update(Sponge *s, char *data, size_t len);
 char *sponge_digest(Sponge *s, size_t digest_len);
 
