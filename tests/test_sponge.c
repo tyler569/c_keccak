@@ -26,24 +26,29 @@ char *test_padding(char *buffer, size_t len, size_t final_len) {
     return buffer;
 }
 
+void print_digest(char *digest, size_t len) {
+    for (int i=0; i<len; i+=1) {
+        printf("%x ", (unsigned char) *(digest + i));
+    }
+    printf("\n");
+}
+
 int main() {
     Sponge *s = sponge_init(&test_permutation, &test_padding, 2, 1);
     Sponge *t = sponge_init(&test_permutation, &test_padding, 2, 1);
     
     sponge_update(s, "1234", 4);
     sponge_update(s, "56789", 5);
-
     sponge_update(t, "123456789", 9);
 
-    char *result_s = sponge_digest(s, 16);
-    char *result_t = sponge_digest(t, 16);
-    for (int i=0; i<16; i+=1) {
-        printf("%x ", (unsigned char) *(result_s + i));
-    }
-    printf("\n");
-    for (int i=0; i<16; i+=1) {
-        printf("%x ", (unsigned char) *(result_t + i));
-    }
-    printf("\n");
+    printf("Should be identical:\n");
+    print_digest(sponge_digest(s, 16), 16);
+    print_digest(sponge_digest(t, 16), 16);
+
+    Sponge *zero_len = sponge_init(&test_permutation, &test_padding, 2, 1);
+
+    printf("\n0 length input:\n");
+    print_digest(sponge_digest(zero_len, 16), 16);
+    
 }
 
